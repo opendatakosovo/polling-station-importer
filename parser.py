@@ -1,12 +1,9 @@
 import csv
-#import sys
-#import urllib
-#from datetime import datetime
 from pymongo import MongoClient
 
 csv_filename = 'polling-stations-general-elections-2014.csv'
 
-# connect to default local instance of mongo
+# Connect to default local instance of mongo
 client = MongoClient()
 
 # Get database and collection
