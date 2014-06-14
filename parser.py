@@ -10,6 +10,9 @@ client = MongoClient()
 db = client.generalelections2014
 collection = db.pollingstations
 
+# Clear data
+db.pollingstations.remove({})
+
 with open(csv_filename, 'rb') as csvfile:
 	reader = csv.reader(csvfile)
 	
