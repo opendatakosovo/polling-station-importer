@@ -1,6 +1,7 @@
 import csv
 import unicodedata
 
+from slugify import Slugify
 from pymongo import MongoClient
 
 csv_filename = 'polling-stations-general-elections-2014.csv'
@@ -19,8 +20,15 @@ def remove_diacritic(str):
     '''
     Accept a unicode string, and return a normal string (bytes in Python 3)
     without any diacritical marks.
+    
+    :param str: The string tor remove dicritical marks from.
     '''
     return unicodedata.normalize('NFKD', str.decode('utf-8')).encode('ASCII', 'ignore')
+    
+def slugify(str):
+	''' Generates a slug for the given string.
+	:param str: The string to slugify. 
+	'''
 
 def parse_csv():
 	'''
@@ -59,39 +67,40 @@ def parse_csv():
 			
 			polling_station_name_sq = row[5]
 			polling_station_name_sr = row[6]
+			
+			slugify = Slugify(to_lower=True)
 				
 			polling_station = {
 				'_id': polling_station_id,
 				'name': {
 					'sq': polling_station_name_sq.strip(),
-					'sr': polling_station_name_sr.strip()
+					'sr': polling_station_name_sr.strip(),
+					'slug':{
+						'sq': slugify(polling_station_name_sq),
+						'sr': slugify(polling_station_name_sr)
+					}
+					
 				},
 				'city': {
 					'sq': city_sq.strip(),
-					'sr': city_sr.strip()
+					'sr': city_sr.strip(),
+					'slug':{
+						'sq': slugify(city_sq),
+						'sr': slugify(city_sr)
+					}
 				},
 				'commune': {
 					'id': commune_id,
 					'sq': commune_name_sq.strip(),
-					'sr': commune_name_sr.strip()
+					'sr': commune_name_sr.strip(),
+					'slug':{
+						'sq': slugify(commune_name_sq),
+						'sr': slugify(commune_name_sr)
+					}
 				},
 				'coordinates': {
 					'lon': 0,
 					'lat': 0
-				},
-				'ascii': {
-					'name': {
-						'sq': remove_diacritic(polling_station_name_sq.strip()),
-						'sr': remove_diacritic(polling_station_name_sr.strip())
-					},
-					'city': {
-						'sq': remove_diacritic(city_sq.strip()),
-						'sr': remove_diacritic(city_sr.strip())
-					},
-					'commune': {
-						'sq': remove_diacritic(commune_name_sq.strip()),
-						'sr': remove_diacritic(commune_name_sr.strip())
-					}
 				}
 			}
 			
