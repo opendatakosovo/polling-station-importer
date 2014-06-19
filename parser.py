@@ -10,11 +10,11 @@ csv_filename = 'polling-stations-general-elections-2014.csv'
 client = MongoClient()
 
 # Get database and collection
-db = client.generalelections2014
-collection = db.pollingstations
+db = client.kdi
+collection = db.generalelectionspollingstations2014
 
 # Clear data
-db.pollingstations.remove({})
+collection.remove({})
 
 def remove_diacritic(str):
     '''
